@@ -59,6 +59,14 @@ inline fun <T, Tʹ, E, Eʹ> Result<T, E>.bimap(f: (T) -> Tʹ, g: (E) -> Eʹ): Re
     map { f(it) }.mapFailure { g(it) }
 
 /**
+ * Fold a function, f, over the `value` of a successful `Result`
+ * and a function, g, over the `reason` of an unsuccessful `Result`
+ * where both functions result in a value of the same type, returning a plain value.
+ */
+inline fun <T, E, Tʹ> Result<T, E>.fold(f: (T) -> Tʹ, g: (E) -> Tʹ): Tʹ =
+    bimap(f, g).get()
+
+/**
  * Flat-map a function over the `reason` of an unsuccessful `Result`.
  */
 inline fun <T, E, Eʹ> Result<T, E>.flatMapFailure(f: (E) -> Result<T, Eʹ>): Result<T, Eʹ> = when (this) {
